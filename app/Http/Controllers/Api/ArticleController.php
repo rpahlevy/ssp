@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Article;
 use App\Models\Website;
 use App\Models\Subscription;
+use App\Models\ArticleNotification;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -61,6 +62,10 @@ class ArticleController extends Controller
             ->where('website_id', $website->id)
             ->get();
         foreach ($subscriptions as $sub) {
+            ArticleNotification::create([
+                'article_id' => $article->id,
+                'subscription_id' => $sub->id,
+            ]);
             dispatch(new SendMailJob([
                 'email' => $sub->user->email,
                 'title' => $article->title,
