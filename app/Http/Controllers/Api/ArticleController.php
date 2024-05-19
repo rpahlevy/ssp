@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Article;
 use App\Models\Website;
 
 use App\Http\Controllers\Controller;
@@ -11,18 +12,20 @@ use App\Http\Resources\PostResource;
 
 use Illuminate\Support\Facades\Validator;
 
-class WebsiteController extends Controller
+class ArticleController extends Controller
 {
     public function index() {
-        $websites = Website::latest()->paginate(5);
+        $articles = Article::latest()->paginate(5);
 
-        return new PostResource(true, 'List 5 latest Websites', $websites);
+        return new PostResource(true, 'List 5 latest Articles', $articles);
     }
 
     public function store(Request $request) {
         //define validation rules
         $validator = Validator::make($request->all(), [
-            'url' => 'required',
+            'website_url' => 'required',
+            'title' => 'required',
+            'description' => 'required',
         ]);
 
         //check if validation fails
@@ -31,7 +34,7 @@ class WebsiteController extends Controller
         }
 
         // check if URL valid
-        $url = filter_var($request->url, FILTER_SANITIZE_URL);
+        $url = filter_var($request->website_url, FILTER_SANITIZE_URL);
         if (filter_var($url, FILTER_VALIDATE_DOMAIN) === FALSE) {
             return response()->json([
                 'website_url' => [
@@ -40,23 +43,18 @@ class WebsiteController extends Controller
             ], 422);
         }
 
-        // check if website exist
-        $website = Website::where('url', $url)
-            ->first();
-        if ($website) {
-            return response()->json([
-                'url' => [
-                    'Website already exists'
-                ]
-            ], 422);
-        }
-
-        //create website
-        $website = Website::create([
+        $website = Website::firstOrCreate([
             'url' => $url,
         ]);
 
+        //create article
+        $article = Article::create([
+            'website_id' => $website->id,
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
         //return response
-        return new PostResource(true, 'Website added!', $website);
+        return new PostResource(true, 'Article posted!', $article);
     }
 }

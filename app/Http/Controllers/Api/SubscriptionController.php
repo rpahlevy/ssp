@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Website;
+use App\Models\User;
+use App\Models\Subscription;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -11,18 +13,13 @@ use App\Http\Resources\PostResource;
 
 use Illuminate\Support\Facades\Validator;
 
-class WebsiteController extends Controller
+class SubscriptionController extends Controller
 {
-    public function index() {
-        $websites = Website::latest()->paginate(5);
-
-        return new PostResource(true, 'List 5 latest Websites', $websites);
-    }
-
     public function store(Request $request) {
         //define validation rules
         $validator = Validator::make($request->all(), [
-            'url' => 'required',
+            'website_url' => 'required',
+            'email' => 'required',
         ]);
 
         //check if validation fails
@@ -31,7 +28,7 @@ class WebsiteController extends Controller
         }
 
         // check if URL valid
-        $url = filter_var($request->url, FILTER_SANITIZE_URL);
+        $url = filter_var($request->website_url, FILTER_SANITIZE_URL);
         if (filter_var($url, FILTER_VALIDATE_DOMAIN) === FALSE) {
             return response()->json([
                 'website_url' => [
@@ -40,23 +37,24 @@ class WebsiteController extends Controller
             ], 422);
         }
 
-        // check if website exist
-        $website = Website::where('url', $url)
-            ->first();
-        if ($website) {
-            return response()->json([
-                'url' => [
-                    'Website already exists'
-                ]
-            ], 422);
-        }
+        $user = User::firstOrCreate([
+            'email' => $request->email,
+        ]);
 
-        //create website
-        $website = Website::create([
+        $website = Website::firstOrCreate([
             'url' => $url,
         ]);
 
+        //create susbcription
+        $subscription = Subscription::create([
+            'user_id' => $user->id,
+            'website_id' => $website->id,
+        ]);
+
         //return response
-        return new PostResource(true, 'Website added!', $website);
+        return new PostResource(true, 'Subscribed successfully!', [
+            'email' => $request->email,
+            'website_url' => $request->website_url,
+        ]);
     }
 }
