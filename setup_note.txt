@@ -13,3 +13,4 @@
 - Migrate & seed the tables with command: "php artisan migrate --seed"
 - Start the server to listen for API request: "php artisan serve"
 - Open another terminal to run the queue: "php artisan queue:work"
+- command to send missed articles to subscribers: "php artisan article:send-notification"
