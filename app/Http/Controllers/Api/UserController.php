@@ -30,6 +30,15 @@ class UserController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
+        // check if email valid
+        if (!filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json([
+                'email' => [
+                    'Email is not valid!'
+                ]
+            ], 422);
+        }
+
         // check if user exist
         $user = User::where('email', $request->email)
             ->first();

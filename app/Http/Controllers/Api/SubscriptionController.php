@@ -37,6 +37,15 @@ class SubscriptionController extends Controller
             ], 422);
         }
 
+        // check if email valid
+        if (!filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json([
+                'email' => [
+                    'Email is not valid!'
+                ]
+            ], 422);
+        }
+
         $user = User::firstOrCreate([
             'email' => $request->email,
         ]);
@@ -46,7 +55,7 @@ class SubscriptionController extends Controller
         ]);
 
         //create susbcription
-        $subscription = Subscription::create([
+        $subscription = Subscription::firstOrCreate([
             'user_id' => $user->id,
             'website_id' => $website->id,
         ]);
