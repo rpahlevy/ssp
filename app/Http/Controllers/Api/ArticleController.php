@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Article;
 use App\Models\Website;
+use App\Models\Subscription;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Jobs\SendMailJob;
 
 use App\Http\Resources\PostResource;
 
@@ -45,7 +47,7 @@ class ArticleController extends Controller
 
         $website = Website::firstOrCreate([
             'url' => $url,
-        ]);
+        ]);;
 
         //create article
         $article = Article::create([
@@ -53,6 +55,18 @@ class ArticleController extends Controller
             'title' => $request->title,
             'description' => $request->description,
         ]);
+
+        // get subscription list
+        $subscriptions = Subscription::with('user')
+            ->where('website_id', $website->id)
+            ->get();
+        foreach ($subscriptions as $sub) {
+            dispatch(new SendMailJob([
+                'email' => $sub->user->email,
+                'title' => $article->title,
+                'description' => $article->description,
+            ]));
+        }
 
         //return response
         return new PostResource(true, 'Article posted!', $article);

@@ -20,5 +20,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('/websites', App\Http\Controllers\Api\WebsiteController::class);
 Route::apiResource('/users', App\Http\Controllers\Api\UserController::class);
-Route::apiResource('/subscriptions', App\Http\Controllers\Api\SubscriptionController::class);
+Route::post('/subscriptions', [App\Http\Controllers\Api\SubscriptionController::class, 'store']);
 Route::apiResource('/articles', App\Http\Controllers\Api\ArticleController::class);
