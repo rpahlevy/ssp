@@ -1,0 +1,8 @@
+POST /subscribe
+    - email
+    - website_url
+POST /article
+    - website_url
+    - title
+    - description
+COMMAND article_notification
