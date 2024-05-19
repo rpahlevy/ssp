@@ -1,0 +1,6 @@
+- Duplicate .env.example to .env file, then change DB_DATABASE into: "ssp_db"
+- Create DB in MySQL with
+    name: "ssp_db"
+    collation: "utf8mb4_general_ci"
+- Migrate & seed the tables with command: "php artisan migrate --seed"
+- 
