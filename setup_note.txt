@@ -1,15 +1,16 @@
+- install all dependencies by running: "composer install"
 - Duplicate .env.example to .env file, then change DB_DATABASE into: "ssp_db"
-- Change information for the EMAIL sending such as:
+- Still inside the new .env file, Change information for the EMAIL sending such as:
     MAIL_MAILER=
     MAIL_HOST=
     MAIL_PORT=
     MAIL_USERNAME=
     MAIL_PASSWORD=
     MAIL_ENCRYPTION=
+- Then open terminal and generate app_key by running: "php artisan key:generate"
 - Create DB in MySQL with
     name: "ssp_db"
     collation: "utf8mb4_general_ci"
-- Setup queue table: "php artisan queue:table"
 - Migrate & seed the tables with command: "php artisan migrate --seed"
 - Start the server to listen for API request: "php artisan serve"
 - Open another terminal to run the queue: "php artisan queue:work"
