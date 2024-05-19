@@ -1,0 +1,23 @@
+User
+- id
+- email
+
+Website
+- id
+- url
+
+Article
+- id
+- website_id
+- title
+- description
+
+Subscription
+- id
+- user_id
+- website_id
+
+ArticleNotification
+- id
+- subscription_id
+- article_id
