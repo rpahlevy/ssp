@@ -7,22 +7,22 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class PostResource extends JsonResource
 {
-    public $status;
+    public $success;
     public $message;
     public $data;
 
     /**
      * __construct
      *
-     * @param  mixed $status
+     * @param  mixed $success
      * @param  mixed $message
      * @param  mixed $data
      * @return void
      */
-    public function __construct($status, $message, $data)
+    public function __construct($success, $message, $data)
     {
         parent::__construct($data);
-        $this->status  = $status;
+        $this->success  = $success;
         $this->message = $message;
         $this->data = $data;
     }
@@ -35,7 +35,7 @@ class PostResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'status' => $this->status,
+            'success' => $this->success,
             'message' => $this->message,
             'data' => $this->data,
         ];
