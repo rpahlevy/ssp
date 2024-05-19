@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Models\ArticleNotification;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -29,13 +31,20 @@ class SendMailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        // $email = new SendEmail($this->data);
-        // Mail::to($this->data['email'])->send($email);
         $email = $this->data['email'];
         $subject = $this->data['title'];
-        Mail::raw($this->data['description'], function (Message $message) use ($email, $subject) {
-            $message->to($email)
+        try {
+            Mail::raw($this->data['description'], function (Message $message) use ($email, $subject) {
+                $message->to($email)
                 ->subject($subject);
-        });
+            });
+
+            $an = ArticleNotification::create([
+                'article_id' => $this->data['article_id'],
+                'subscription_id' => $this->data['subscription_id'],
+            ]);
+        } catch (Exception $e) {
+            $this->release(now()->addSeconds(10));
+        }
     }
 }

@@ -1,4 +1,11 @@
 - Duplicate .env.example to .env file, then change DB_DATABASE into: "ssp_db"
+- Change information for the EMAIL sending such as:
+    MAIL_MAILER=
+    MAIL_HOST=
+    MAIL_PORT=
+    MAIL_USERNAME=
+    MAIL_PASSWORD=
+    MAIL_ENCRYPTION=
 - Create DB in MySQL with
     name: "ssp_db"
     collation: "utf8mb4_general_ci"
