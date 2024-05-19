@@ -24,6 +24,7 @@ class PostResource extends JsonResource
         parent::__construct($data);
         $this->status  = $status;
         $this->message = $message;
+        $this->data = $data;
     }
 
     /**

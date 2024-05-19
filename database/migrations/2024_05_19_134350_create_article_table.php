@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('article', function (Blueprint $table) {
+        Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('website_id');
-			$table->foreign('website_id')->references('id')->on('website')->onDelete('cascade');
+			$table->foreign('website_id')->references('id')->on('websites')->onDelete('cascade');
             $table->text('title');
             $table->text('description');
             $table->softDeletes();
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('article');
+        Schema::dropIfExists('articles');
     }
 };
